@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 
 export const metadata: Metadata = {
   title: "婚活戦略診断ツール | アストラ",
@@ -24,7 +25,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja" className="h-full antialiased">
-      <body className="min-h-full bg-white">{children}</body>
+      <body className="min-h-full bg-white">
+        <GoogleAnalytics />
+        {children}
+      </body>
     </html>
   );
 }

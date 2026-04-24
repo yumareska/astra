@@ -21,6 +21,8 @@ import { ChildrenStep } from "./steps/ChildrenStep";
 import { StrategyResult } from "@/components/result/StrategyResult";
 import { classifyStrategyId } from "@/lib/strategy/classifyStrategyId";
 import { applyChildModifier } from "@/lib/strategy/applyChildModifier";
+import { trackQuizComplete } from "@/lib/analytics/track";
+import { useEffect } from "react";
 
 export function QuizContainer() {
   const quiz = useQuizStep();
@@ -133,5 +135,20 @@ function ResultView({ answers, onRestart }: ResultViewProps) {
   };
   const id = classifyStrategyId(input);
   const modifier = applyChildModifier(input.childPreference);
+  return <ResultInner id={id} modifier={modifier} onRestart={onRestart} />;
+}
+
+function ResultInner({
+  id,
+  modifier,
+  onRestart,
+}: {
+  id: ReturnType<typeof classifyStrategyId>;
+  modifier: ReturnType<typeof applyChildModifier>;
+  onRestart: () => void;
+}) {
+  useEffect(() => {
+    trackQuizComplete(id);
+  }, [id]);
   return <StrategyResult strategyId={id} modifier={modifier} onRestart={onRestart} />;
 }

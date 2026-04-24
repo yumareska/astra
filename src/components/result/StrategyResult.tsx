@@ -3,6 +3,7 @@
 import { getStrategyContent } from "@/lib/content/strategies";
 import type { ChildModifier, StrategyId } from "@/lib/strategy/types";
 import { CopyButton } from "./CopyButton";
+import { trackCtaClick } from "@/lib/analytics/track";
 
 const WHEN_LABEL: Record<"today" | "thisWeek" | "thisMonth", string> = {
   today: "今日",
@@ -155,7 +156,7 @@ export function StrategyResult({ strategyId, modifier, onRestart }: Props) {
         </div>
       </Section>
 
-      <CtaBlock />
+      <CtaBlock strategyId={strategyId} />
 
       <div className="mt-4 text-center">
         <button
@@ -227,7 +228,7 @@ function Row({ label, body }: { label: string; body: string }) {
   );
 }
 
-function CtaBlock() {
+function CtaBlock({ strategyId }: { strategyId: StrategyId }) {
   return (
     <div className="rounded-2xl bg-navy-800 p-6 text-white md:p-8">
       <p className="text-sm font-semibold tracking-wider text-accent-500">
@@ -246,6 +247,7 @@ function CtaBlock() {
         href={BOOKING_URL}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => trackCtaClick(strategyId)}
         className="mt-6 block w-full rounded-xl bg-accent-500 py-4 text-center font-bold text-navy-900 transition hover:bg-accent-600"
       >
         ▼ 無料で戦略を作ってもらう（オンライン可）▼
