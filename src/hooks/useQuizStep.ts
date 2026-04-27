@@ -46,9 +46,22 @@ export interface UseQuizStepReturn {
   reset: () => void;
 }
 
-export function useQuizStep(): UseQuizStepReturn {
-  const [index, setIndex] = useState(0);
-  const [answers, setAnswers] = useState<Answers>({});
+function isComplete(a: Answers): boolean {
+  return !!(
+    a.gender &&
+    a.age &&
+    a.residence !== undefined &&
+    a.remarriage !== undefined &&
+    a.childPreference
+  );
+}
+
+export function useQuizStep(initialAnswers?: Answers): UseQuizStepReturn {
+  const [answers, setAnswers] = useState<Answers>(() => initialAnswers ?? {});
+  const [index, setIndex] = useState(() => {
+    if (!initialAnswers || !isComplete(initialAnswers)) return 0;
+    return computeSteps(initialAnswers).length - 1;
+  });
 
   const steps = useMemo(() => computeSteps(answers), [answers]);
   const clampedIndex = Math.min(index, steps.length - 1);

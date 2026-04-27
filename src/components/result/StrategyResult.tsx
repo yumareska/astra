@@ -4,6 +4,7 @@ import { getStrategyContent } from "@/lib/content/strategies";
 import type { ChildModifier, StrategyId } from "@/lib/strategy/types";
 import { CopyButton } from "./CopyButton";
 import { trackCtaClick } from "@/lib/analytics/track";
+import { useEffect, useState } from "react";
 
 const WHEN_LABEL: Record<"today" | "thisWeek" | "thisMonth", string> = {
   today: "今日",
@@ -17,9 +18,10 @@ interface Props {
   strategyId: StrategyId;
   modifier: ChildModifier;
   onRestart: () => void;
+  encodedParams?: string;
 }
 
-export function StrategyResult({ strategyId, modifier, onRestart }: Props) {
+export function StrategyResult({ strategyId, modifier, onRestart, encodedParams }: Props) {
   const c = getStrategyContent(strategyId);
   const isFemale = strategyId.startsWith("F-");
 
@@ -158,6 +160,8 @@ export function StrategyResult({ strategyId, modifier, onRestart }: Props) {
 
       <CtaBlock strategyId={strategyId} />
 
+      <SaveBlock encodedParams={encodedParams} />
+
       <div className="mt-4 text-center">
         <button
           onClick={onRestart}
@@ -225,6 +229,61 @@ function Row({ label, body }: { label: string; body: string }) {
       </span>
       {body}
     </p>
+  );
+}
+
+function SaveBlock({ encodedParams }: { encodedParams?: string }) {
+  const [shareUrl, setShareUrl] = useState("");
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (encodedParams) {
+      setShareUrl(
+        `${window.location.origin}${window.location.pathname}?${encodedParams}`
+      );
+    }
+  }, [encodedParams]);
+
+  if (!encodedParams) return null;
+
+  const lineUrl = shareUrl
+    ? `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}`
+    : "#";
+
+  const handleCopy = async () => {
+    if (!shareUrl) return;
+    await navigator.clipboard.writeText(shareUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="rounded-xl border border-navy-200 bg-navy-50 p-5">
+      <p className="mb-1 text-sm font-semibold text-navy-900">
+        あとで見返すために保存する
+      </p>
+      <p className="mb-4 text-xs text-navy-600">
+        URLをブックマークするか、LINEで自分に送って保存できます。
+      </p>
+      <div className="flex flex-col gap-3 sm:flex-row">
+        <button
+          onClick={handleCopy}
+          disabled={!shareUrl}
+          className="flex flex-1 items-center justify-center rounded-lg border border-navy-300 bg-white px-4 py-2.5 text-sm font-semibold text-navy-800 transition hover:bg-navy-100 disabled:opacity-40"
+        >
+          {copied ? "コピーしました ✓" : "URLをコピー"}
+        </button>
+        <a
+          href={lineUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-disabled={!shareUrl}
+          className="flex flex-1 items-center justify-center rounded-lg bg-[#06C755] px-4 py-2.5 text-sm font-semibold text-white transition hover:opacity-90 aria-disabled:pointer-events-none aria-disabled:opacity-40"
+        >
+          LINEで保存する
+        </a>
+      </div>
+    </div>
   );
 }
 

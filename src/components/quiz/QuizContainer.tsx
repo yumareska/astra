@@ -22,10 +22,20 @@ import { StrategyResult } from "@/components/result/StrategyResult";
 import { classifyStrategyId } from "@/lib/strategy/classifyStrategyId";
 import { applyChildModifier } from "@/lib/strategy/applyChildModifier";
 import { trackQuizComplete } from "@/lib/analytics/track";
-import { useEffect } from "react";
+import { decodeAnswers, encodeAnswers } from "@/lib/strategy/urlParams";
+import { useEffect, useMemo } from "react";
 
-export function QuizContainer() {
-  const quiz = useQuizStep();
+interface QuizContainerProps {
+  initialSearch?: string | null;
+}
+
+export function QuizContainer({ initialSearch }: QuizContainerProps) {
+  const initialAnswers = useMemo(() => {
+    if (!initialSearch) return undefined;
+    return decodeAnswers(initialSearch) ?? undefined;
+  }, [initialSearch]);
+
+  const quiz = useQuizStep(initialAnswers);
   const gender = quiz.answers.gender as Gender | undefined;
   const showProgress =
     quiz.currentStep !== "lp" && quiz.currentStep !== "result";
@@ -93,7 +103,7 @@ export function QuizContainer() {
       )}
 
       {quiz.currentStep === "result" && (
-        <ResultView answers={quiz.answers} onRestart={quiz.reset} />
+        <ResultView answers={quiz.answers} onRestart={quiz.reset} encodedParams={encodeAnswers(quiz.answers)} />
       )}
     </div>
   );
@@ -102,9 +112,10 @@ export function QuizContainer() {
 interface ResultViewProps {
   answers: Partial<UserInput>;
   onRestart: () => void;
+  encodedParams: string;
 }
 
-function ResultView({ answers, onRestart }: ResultViewProps) {
+function ResultView({ answers, onRestart, encodedParams }: ResultViewProps) {
   if (
     !answers.gender ||
     !answers.age ||
@@ -135,20 +146,22 @@ function ResultView({ answers, onRestart }: ResultViewProps) {
   };
   const id = classifyStrategyId(input);
   const modifier = applyChildModifier(input.childPreference);
-  return <ResultInner id={id} modifier={modifier} onRestart={onRestart} />;
+  return <ResultInner id={id} modifier={modifier} onRestart={onRestart} encodedParams={encodedParams} />;
 }
 
 function ResultInner({
   id,
   modifier,
   onRestart,
+  encodedParams,
 }: {
   id: ReturnType<typeof classifyStrategyId>;
   modifier: ReturnType<typeof applyChildModifier>;
   onRestart: () => void;
+  encodedParams: string;
 }) {
   useEffect(() => {
     trackQuizComplete(id);
   }, [id]);
-  return <StrategyResult strategyId={id} modifier={modifier} onRestart={onRestart} />;
+  return <StrategyResult strategyId={id} modifier={modifier} onRestart={onRestart} encodedParams={encodedParams} />;
 }
