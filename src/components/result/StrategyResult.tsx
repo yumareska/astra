@@ -61,178 +61,182 @@ export function StrategyResult({ strategyId, modifier, onRestart, encodedParams,
   const isFemale = strategyId.startsWith("F-");
 
   return (
-    <article className="flex flex-col gap-10">
-      <Header name={c.name} catchphrase={c.catchphrase} isFemale={isFemale} input={input} />
+    <>
+      <article className="flex flex-col gap-10 pb-24">
+        <Header name={c.name} catchphrase={c.catchphrase} isFemale={isFemale} input={input} />
 
-      <Section title="① 共感フック">
-        <p className="mb-3 text-navy-700">{c.empathyHook.intro}</p>
-        <ul className="space-y-2">
-          {c.empathyHook.checks.map((check, i) => (
-            <li
-              key={i}
-              className="flex items-start gap-3 rounded-lg border border-navy-100 bg-navy-50 p-3 text-sm text-navy-800"
-            >
-              <span className="mt-0.5 text-accent-600">☐</span>
-              <span>{check}</span>
-            </li>
-          ))}
-        </ul>
-      </Section>
-
-      <Section title="② 市場データ">
-        <p className="leading-relaxed text-navy-700">{c.marketData.body}</p>
-      </Section>
-
-      <Section title="ポジション解説">
-        <p className="leading-relaxed text-navy-700">{c.positionAnalysis}</p>
-      </Section>
-
-      <FoldableSection title="ストーリー事例">
-        <div className="rounded-xl border border-navy-200 bg-white p-5 text-sm leading-relaxed">
-          <p className="mb-3 font-bold text-navy-900">{c.story.personaLabel}</p>
-          <div className="space-y-2 text-navy-700">
-            <Row label="Before" body={c.story.before} />
-            <Row label="戦略" body={c.story.strategy} />
-            <Row label="After" body={c.story.after} />
-          </div>
-        </div>
-      </FoldableSection>
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <Section title="DO（推奨）">
-          <ul className="flex flex-col gap-3">
-            {c.dos.map((d, i) => (
+        <Section title="① 共感フック">
+          <p className="mb-3 text-navy-700">{c.empathyHook.intro}</p>
+          <ul className="space-y-2">
+            {c.empathyHook.checks.map((check, i) => (
               <li
                 key={i}
-                className="rounded-lg border-l-4 border-accent-500 bg-accent-50/40 p-3 text-sm"
-                style={{ backgroundColor: "rgba(197,155,90,0.08)" }}
+                className="flex items-start gap-3 rounded-lg border border-navy-100 bg-navy-50 p-3 text-sm text-navy-800"
               >
-                <p className="font-semibold text-navy-900">{d.action}</p>
-                <p className="mt-1 text-navy-600">→ {d.reason}</p>
+                <span className="mt-0.5 text-accent-600">☐</span>
+                <span>{check}</span>
               </li>
             ))}
           </ul>
         </Section>
-        <Section title="DON'T（NG）">
-          <ul className="flex flex-col gap-3">
-            {c.donts.map((d, i) => (
+
+        <Section title="② 市場データ">
+          <p className="leading-relaxed text-navy-700">{c.marketData.body}</p>
+        </Section>
+
+        <Section title="ポジション解説">
+          <p className="leading-relaxed text-navy-700">{c.positionAnalysis}</p>
+        </Section>
+
+        <FoldableSection title="ストーリー事例">
+          <div className="rounded-xl border border-navy-200 bg-white p-5 text-sm leading-relaxed">
+            <p className="mb-3 font-bold text-navy-900">{c.story.personaLabel}</p>
+            <div className="space-y-2 text-navy-700">
+              <Row label="Before" body={c.story.before} />
+              <Row label="戦略" body={c.story.strategy} />
+              <Row label="After" body={c.story.after} />
+            </div>
+          </div>
+        </FoldableSection>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <Section title="DO（推奨）">
+            <ul className="flex flex-col gap-3">
+              {c.dos.map((d, i) => (
+                <li
+                  key={i}
+                  className="rounded-lg border-l-4 border-accent-500 bg-accent-50/40 p-3 text-sm"
+                  style={{ backgroundColor: "rgba(197,155,90,0.08)" }}
+                >
+                  <p className="font-semibold text-navy-900">{d.action}</p>
+                  <p className="mt-1 text-navy-600">→ {d.reason}</p>
+                </li>
+              ))}
+            </ul>
+          </Section>
+          <Section title="DON'T（NG）">
+            <ul className="flex flex-col gap-3">
+              {c.donts.map((d, i) => (
+                <li
+                  key={i}
+                  className="rounded-lg border-l-4 border-red-400 bg-red-50 p-3 text-sm"
+                >
+                  <p className="font-semibold text-navy-900">{d.action}</p>
+                  <p className="mt-1 text-navy-600">→ {d.reason}</p>
+                </li>
+              ))}
+            </ul>
+          </Section>
+        </div>
+
+        <FoldableSection title="③ あるある失敗パターン">
+          <ul className="flex flex-col gap-2">
+            {c.commonFailures.map((f, i) => (
               <li
                 key={i}
-                className="rounded-lg border-l-4 border-red-400 bg-red-50 p-3 text-sm"
+                className="rounded-lg bg-navy-50 p-3 text-sm text-navy-800"
               >
-                <p className="font-semibold text-navy-900">{d.action}</p>
-                <p className="mt-1 text-navy-600">→ {d.reason}</p>
+                <span className="font-bold text-navy-900">{f.label}:</span> {f.body}
               </li>
             ))}
           </ul>
+        </FoldableSection>
+
+        <Section title="勝ちパターンの型">
+          <div className="rounded-xl border border-navy-300 bg-white p-5">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <p className="text-sm font-semibold text-navy-900">
+                {c.winningPattern.title}
+              </p>
+              <CopyButton text={c.winningPattern.template} label="テンプレをコピー" />
+            </div>
+            <p className="whitespace-pre-wrap rounded-md bg-navy-50 p-4 text-sm leading-relaxed text-navy-800">
+              {c.winningPattern.template}
+            </p>
+          </div>
         </Section>
-      </div>
 
-      <FoldableSection title="③ あるある失敗パターン">
-        <ul className="flex flex-col gap-2">
-          {c.commonFailures.map((f, i) => (
-            <li
-              key={i}
-              className="rounded-lg bg-navy-50 p-3 text-sm text-navy-800"
-            >
-              <span className="font-bold text-navy-900">{f.label}:</span> {f.body}
-            </li>
-          ))}
-        </ul>
-      </FoldableSection>
-
-      <Section title="勝ちパターンの型">
-        <div className="rounded-xl border border-navy-300 bg-white p-5">
-          <div className="mb-3 flex items-center justify-between gap-3">
-            <p className="text-sm font-semibold text-navy-900">
-              {c.winningPattern.title}
+        <Section title="PRO TIP（アストラ独自）">
+          <div className="rounded-xl border-2 border-accent-500 bg-white p-5">
+            <p className="text-sm font-bold tracking-wider text-accent-600">
+              ◆ ASTRA INSIGHT
             </p>
-            <CopyButton text={c.winningPattern.template} label="テンプレをコピー" />
+            <p className="mt-2 leading-relaxed text-navy-800">{c.proTip}</p>
           </div>
-          <p className="whitespace-pre-wrap rounded-md bg-navy-50 p-4 text-sm leading-relaxed text-navy-800">
-            {c.winningPattern.template}
-          </p>
-        </div>
-      </Section>
+        </Section>
 
-      <Section title="PRO TIP（アストラ独自）">
-        <div className="rounded-xl border-2 border-accent-500 bg-white p-5">
-          <p className="text-sm font-bold tracking-wider text-accent-600">
-            ◆ ASTRA INSIGHT
-          </p>
-          <p className="mt-2 leading-relaxed text-navy-800">{c.proTip}</p>
-        </div>
-      </Section>
+        <Section title="First Action 3段階">
+          <div className="grid gap-3 md:grid-cols-3">
+            {c.firstActions.map((a, i) => (
+              <div
+                key={i}
+                className="flex flex-col gap-2 rounded-xl border border-navy-200 bg-white p-4"
+              >
+                <span className="inline-block self-start rounded-full bg-navy-800 px-3 py-1 text-xs font-bold text-white">
+                  {WHEN_LABEL[a.when]}
+                </span>
+                <p className="text-sm text-navy-800">{a.action}</p>
+              </div>
+            ))}
+          </div>
+        </Section>
 
-      <Section title="First Action 3段階">
-        <div className="grid gap-3 md:grid-cols-3">
-          {c.firstActions.map((a, i) => (
-            <div
-              key={i}
-              className="flex flex-col gap-2 rounded-xl border border-navy-200 bg-white p-4"
-            >
-              <span className="inline-block self-start rounded-full bg-navy-800 px-3 py-1 text-xs font-bold text-white">
-                {WHEN_LABEL[a.when]}
-              </span>
-              <p className="text-sm text-navy-800">{a.action}</p>
+        <CtaBlock strategyId={strategyId} />
+
+        <Section title="あなたのライフプランに合わせて">
+          {modifier === "flexible" ? (
+            <div className="grid gap-3 md:grid-cols-2">
+              <div className="rounded-xl bg-navy-50 p-5 text-sm leading-relaxed text-navy-800">
+                <p className="mb-2 text-xs font-bold text-navy-600">
+                  ▼ 家族を持つことを軸にした戦略
+                </p>
+                <p>{c.childModifier.withChildren}</p>
+              </div>
+              <div className="rounded-xl bg-navy-50 p-5 text-sm leading-relaxed text-navy-800">
+                <p className="mb-2 text-xs font-bold text-navy-600">
+                  ▼ 二人の時間を軸にした戦略
+                </p>
+                <p>{c.childModifier.withoutChildren}</p>
+              </div>
             </div>
-          ))}
-        </div>
-      </Section>
-
-      <Section title="あなたのライフプランに合わせて">
-        {modifier === "flexible" ? (
-          <div className="grid gap-3 md:grid-cols-2">
+          ) : (
             <div className="rounded-xl bg-navy-50 p-5 text-sm leading-relaxed text-navy-800">
               <p className="mb-2 text-xs font-bold text-navy-600">
-                ▼ 家族を持つことを軸にした戦略
+                {modifier === "with-children"
+                  ? "▼ 家族を持つことを軸にした戦略"
+                  : "▼ 二人の時間を軸にした戦略"}
               </p>
-              <p>{c.childModifier.withChildren}</p>
-            </div>
-            <div className="rounded-xl bg-navy-50 p-5 text-sm leading-relaxed text-navy-800">
-              <p className="mb-2 text-xs font-bold text-navy-600">
-                ▼ 二人の時間を軸にした戦略
+              <p>
+                {modifier === "with-children"
+                  ? c.childModifier.withChildren
+                  : c.childModifier.withoutChildren}
               </p>
-              <p>{c.childModifier.withoutChildren}</p>
             </div>
-          </div>
-        ) : (
-          <div className="rounded-xl bg-navy-50 p-5 text-sm leading-relaxed text-navy-800">
-            <p className="mb-2 text-xs font-bold text-navy-600">
-              {modifier === "with-children"
-                ? "▼ 家族を持つことを軸にした戦略"
-                : "▼ 二人の時間を軸にした戦略"}
-            </p>
-            <p>
-              {modifier === "with-children"
-                ? c.childModifier.withChildren
-                : c.childModifier.withoutChildren}
-            </p>
-          </div>
+          )}
+        </Section>
+
+        {input.remarriage && input.hasChildren && c.ownChildrenAdvice && (
+          <Section title="お子様がいらっしゃる場合の追加アドバイス">
+            <div className="rounded-xl border-l-4 border-accent-500 bg-accent-50/40 p-5 text-sm leading-relaxed text-navy-800" style={{ backgroundColor: "rgba(197,155,90,0.08)" }}>
+              <p>{c.ownChildrenAdvice}</p>
+            </div>
+          </Section>
         )}
-      </Section>
 
-      {input.remarriage && input.hasChildren && c.ownChildrenAdvice && (
-        <Section title="お子様がいらっしゃる場合の追加アドバイス">
-          <div className="rounded-xl border-l-4 border-accent-500 bg-accent-50/40 p-5 text-sm leading-relaxed text-navy-800" style={{ backgroundColor: "rgba(197,155,90,0.08)" }}>
-            <p>{c.ownChildrenAdvice}</p>
-          </div>
-        </Section>
-      )}
+        <SaveBlock encodedParams={encodedParams} />
 
-      <CtaBlock strategyId={strategyId} />
+        <div className="mt-4 text-center">
+          <button
+            onClick={onRestart}
+            className="text-sm text-navy-500 underline-offset-4 hover:text-navy-800 hover:underline"
+          >
+            もう一度診断する
+          </button>
+        </div>
+      </article>
 
-      <SaveBlock encodedParams={encodedParams} />
-
-      <div className="mt-4 text-center">
-        <button
-          onClick={onRestart}
-          className="text-sm text-navy-500 underline-offset-4 hover:text-navy-800 hover:underline"
-        >
-          もう一度診断する
-        </button>
-      </div>
-    </article>
+      <FloatingCtaBar strategyId={strategyId} />
+    </>
   );
 }
 
@@ -372,6 +376,43 @@ function SaveBlock({ encodedParams }: { encodedParams?: string }) {
         >
           LINEで保存する
         </a>
+      </div>
+    </div>
+  );
+}
+
+function FloatingCtaBar({ strategyId }: { strategyId: StrategyId }) {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > 400);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <div
+      className={`fixed bottom-0 left-0 right-0 z-50 transition-transform duration-300 ${
+        visible ? "translate-y-0" : "translate-y-full"
+      }`}
+    >
+      <div className="border-t border-navy-700 bg-navy-900/95 shadow-2xl backdrop-blur-sm">
+        <div className="mx-auto flex max-w-lg items-center gap-3 px-4 py-3">
+          <p className="min-w-0 flex-1 text-xs leading-tight text-navy-200">
+            あなただけの個別戦略を作る
+            <span className="ml-1 font-semibold text-accent-400">無料・60分</span>
+          </p>
+          <a
+            href={BOOKING_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackCtaClick(strategyId)}
+            className="shrink-0 rounded-xl bg-accent-500 px-5 py-2.5 text-sm font-bold text-navy-900 shadow-lg transition hover:bg-accent-600 active:scale-95"
+          >
+            無料面談を予約
+          </a>
+        </div>
       </div>
     </div>
   );
