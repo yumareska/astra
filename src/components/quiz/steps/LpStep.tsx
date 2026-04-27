@@ -10,7 +10,7 @@ export function LpStep({ onStart }: Props) {
   return (
     <div className="flex flex-col">
       <div className="mb-1 text-sm font-semibold tracking-widest text-accent-600">
-        ASTRA / 婚活戦略診断
+        ASTRA / スペック別・婚活戦略診断
       </div>
       <h1 className="text-2xl font-bold leading-snug text-navy-900 md:text-3xl">
         あなたの婚活、
@@ -20,7 +20,7 @@ export function LpStep({ onStart }: Props) {
       <p className="mt-4 leading-relaxed text-navy-700">
         性別・年齢・年収・居住地など数問に答えるだけで、
         IBJ結婚データに基づく
-        <strong className="text-navy-900">あなた専用の婚活戦略ID</strong>
+        <strong className="text-navy-900">あなた専用の婚活戦略</strong>
         をお届けします。
       </p>
 
@@ -35,7 +35,7 @@ export function LpStep({ onStart }: Props) {
         </li>
         <li className="flex gap-2">
           <span className="text-accent-600">◆</span>
-          15種類の戦略IDからあなたに最適なものを提示
+          15種類の戦略からあなたに最適なものを提示
         </li>
       </ul>
 

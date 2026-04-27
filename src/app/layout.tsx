@@ -3,13 +3,13 @@ import "./globals.css";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 
 export const metadata: Metadata = {
-  title: "婚活戦略診断ツール | アストラ",
+  title: "スペック別・婚活戦略診断ツール | アストラ",
   description:
-    "性別・年齢・年収などから、あなた専用の婚活戦略IDを即座に診断。15種類の戦略から、データに基づくDO/DON'Tと具体的アクションをお届けします。",
+    "性別・年齢・年収などから、あなた専用の婚活戦略を即座に診断。15種類の戦略から、データに基づくDO/DON'Tと具体的アクションをお届けします。",
   openGraph: {
-    title: "婚活戦略診断ツール | アストラ",
+    title: "スペック別・婚活戦略診断ツール | アストラ",
     description:
-      "あなたの婚活、勝ち筋がわかる。IBJ結婚データに基づく15種類の戦略IDから最適なものを診断します。",
+      "あなたの婚活、勝ち筋がわかる。IBJ結婚データに基づく15種類の戦略から最適なものを診断します。",
     type: "website",
   },
   robots: {

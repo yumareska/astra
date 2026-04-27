@@ -232,28 +232,68 @@ function CtaBlock({ strategyId }: { strategyId: StrategyId }) {
   return (
     <div className="rounded-2xl bg-navy-800 p-6 text-white md:p-8">
       <p className="text-sm font-semibold tracking-wider text-accent-500">
-        ASTRA - 個別オーダーメイド戦略立案
+        ASTRA - オーダーメイド戦略作成面談（無料・オンライン）
       </p>
       <h2 className="mt-2 text-xl font-bold leading-snug md:text-2xl">
-        この戦略は「入口」にすぎません。
+        この診断は「スペック別」の戦略です。
+        <br />
+        あなたの本当の勝ち筋は、もっと先にあります。
       </h2>
       <p className="mt-4 text-sm leading-relaxed text-navy-100">
-        実際の婚活では、性格・外見の雰囲気・会話のクセといった変数が加わります。
-        アストラでは、あなただけの
-        <strong className="text-white">オーダーメイド婚活戦略を無料で作成</strong>
-        します。（オンライン可）
+        年齢・年収・居住地が同じでも、婚活の結果は人によって全く違います。
+        写真の雰囲気、プロフィールの言葉選び、どんな相手にどう当たるか——
+        <strong className="text-white">
+          これらはスペックではなく、あなた個人の情報を見なければ決められません。
+        </strong>
       </p>
+      <p className="mt-4 text-sm leading-relaxed text-navy-100">
+        面談では、あなたのことを直接お聞きした上で、
+        <strong className="text-white">あなただけに当てはまる戦略</strong>
+        を一緒に言語化します。
+        この診断結果をスタート地点として、本当の意味での婚活の勝ち筋を作りましょう。
+      </p>
+      <p className="mt-5 text-sm font-semibold text-accent-400">
+        面談でお渡しする戦略シートに含まれるもの：
+      </p>
+      <ul className="mt-2 space-y-2 text-sm text-navy-100">
+        <li className="flex items-start gap-2">
+          <span className="mt-0.5 shrink-0 text-accent-500">◆</span>
+          <span>
+            <strong className="text-white">市場でのあなたの評価</strong>
+            ——同年代・同スペックの中で何が強みで、何が足を引っ張っているか
+          </span>
+        </li>
+        <li className="flex items-start gap-2">
+          <span className="mt-0.5 shrink-0 text-accent-500">◆</span>
+          <span>
+            <strong className="text-white">プロフィール・写真の改善方針</strong>
+            ——今何がNGで、どう変えれば反応が変わるか
+          </span>
+        </li>
+        <li className="flex items-start gap-2">
+          <span className="mt-0.5 shrink-0 text-accent-500">◆</span>
+          <span>
+            <strong className="text-white">アプローチすべき相手の定義</strong>
+            ——年齢・属性・優先順位を具体的に絞り込む
+          </span>
+        </li>
+      </ul>
       <a
         href={BOOKING_URL}
         target="_blank"
         rel="noopener noreferrer"
         onClick={() => trackCtaClick(strategyId)}
-        className="mt-6 block w-full rounded-xl bg-accent-500 py-4 text-center font-bold text-navy-900 transition hover:bg-accent-600"
+        className="mt-6 block w-full rounded-xl bg-accent-500 px-4 py-4 text-center text-navy-900 transition hover:bg-accent-600"
       >
-        ▼ 無料で戦略を作ってもらう（オンライン可）▼
+        <span className="block text-base font-bold leading-snug">
+          あなただけの個別戦略を作ってもらう
+        </span>
+        <span className="mt-1 block text-xs font-normal opacity-80">
+          無料・完全オンライン・所要時間60分
+        </span>
       </a>
       <p className="mt-4 text-center text-xs text-navy-200">
-        ※「相談」ではなく「戦略立案」です。30分で、あなたの勝ち筋が見えます。
+        ※「相談」ではなく「個別戦略の作成」の場です。
       </p>
     </div>
   );
