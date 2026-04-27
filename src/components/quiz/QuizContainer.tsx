@@ -146,7 +146,7 @@ function ResultView({ answers, onRestart, encodedParams }: ResultViewProps) {
   };
   const id = classifyStrategyId(input);
   const modifier = applyChildModifier(input.childPreference);
-  return <ResultInner id={id} modifier={modifier} onRestart={onRestart} encodedParams={encodedParams} />;
+  return <ResultInner id={id} modifier={modifier} onRestart={onRestart} encodedParams={encodedParams} input={input} />;
 }
 
 function ResultInner({
@@ -154,14 +154,16 @@ function ResultInner({
   modifier,
   onRestart,
   encodedParams,
+  input,
 }: {
   id: ReturnType<typeof classifyStrategyId>;
   modifier: ReturnType<typeof applyChildModifier>;
   onRestart: () => void;
   encodedParams: string;
+  input: UserInput;
 }) {
   useEffect(() => {
     trackQuizComplete(id);
   }, [id]);
-  return <StrategyResult strategyId={id} modifier={modifier} onRestart={onRestart} encodedParams={encodedParams} />;
+  return <StrategyResult strategyId={id} modifier={modifier} onRestart={onRestart} encodedParams={encodedParams} input={input} />;
 }

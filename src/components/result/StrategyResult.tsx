@@ -1,7 +1,7 @@
 "use client";
 
 import { getStrategyContent } from "@/lib/content/strategies";
-import type { ChildModifier, StrategyId } from "@/lib/strategy/types";
+import type { ChildModifier, StrategyId, UserInput } from "@/lib/strategy/types";
 import { CopyButton } from "./CopyButton";
 import { trackCtaClick } from "@/lib/analytics/track";
 import { useEffect, useState } from "react";
@@ -12,6 +12,36 @@ const WHEN_LABEL: Record<"today" | "thisWeek" | "thisMonth", string> = {
   thisMonth: "今月",
 };
 
+const AGE_LABEL: Record<UserInput["age"], string> = {
+  "20s": "20代",
+  "30-34": "30代前半",
+  "35-39": "30代後半",
+  "40+": "40代以上",
+};
+
+const INCOME_LABEL: Record<NonNullable<UserInput["income"]>, string> = {
+  under500: "年収〜500万",
+  "500-799": "年収500〜799万",
+  "800plus": "年収800万〜",
+  undisclosed: "年収非公開",
+};
+
+const CHILD_LABEL: Record<UserInput["childPreference"], string> = {
+  want: "子供希望",
+  "not-want": "子供不要",
+  "no-preference": "こだわらない",
+};
+
+function formatInput(input: UserInput): string {
+  const parts: string[] = [];
+  parts.push(`${AGE_LABEL[input.age]}・${input.gender === "male" ? "男性" : "女性"}`);
+  if (input.income) parts.push(INCOME_LABEL[input.income]);
+  parts.push(input.residence === "urban" ? "都市部" : "地方");
+  parts.push(input.remarriage ? "再婚" : "初婚");
+  parts.push(CHILD_LABEL[input.childPreference]);
+  return parts.join(" / ");
+}
+
 const BOOKING_URL = "https://calendar.app.google/FmTf7UW7N86nwvbp6";
 
 interface Props {
@@ -19,15 +49,16 @@ interface Props {
   modifier: ChildModifier;
   onRestart: () => void;
   encodedParams?: string;
+  input: UserInput;
 }
 
-export function StrategyResult({ strategyId, modifier, onRestart, encodedParams }: Props) {
+export function StrategyResult({ strategyId, modifier, onRestart, encodedParams, input }: Props) {
   const c = getStrategyContent(strategyId);
   const isFemale = strategyId.startsWith("F-");
 
   return (
     <article className="flex flex-col gap-10">
-      <Header id={strategyId} name={c.name} catchphrase={c.catchphrase} isFemale={isFemale} />
+      <Header name={c.name} catchphrase={c.catchphrase} isFemale={isFemale} input={input} />
 
       <Section title="① 共感フック">
         <p className="mb-3 text-navy-700">{c.empathyHook.intro}</p>
@@ -52,7 +83,7 @@ export function StrategyResult({ strategyId, modifier, onRestart, encodedParams 
         <p className="leading-relaxed text-navy-700">{c.positionAnalysis}</p>
       </Section>
 
-      <Section title="ストーリー事例">
+      <FoldableSection title="ストーリー事例">
         <div className="rounded-xl border border-navy-200 bg-white p-5 text-sm leading-relaxed">
           <p className="mb-3 font-bold text-navy-900">{c.story.personaLabel}</p>
           <div className="space-y-2 text-navy-700">
@@ -61,7 +92,7 @@ export function StrategyResult({ strategyId, modifier, onRestart, encodedParams 
             <Row label="After" body={c.story.after} />
           </div>
         </div>
-      </Section>
+      </FoldableSection>
 
       <div className="grid gap-4 md:grid-cols-2">
         <Section title="DO（推奨）">
@@ -93,7 +124,7 @@ export function StrategyResult({ strategyId, modifier, onRestart, encodedParams 
         </Section>
       </div>
 
-      <Section title="③ あるある失敗パターン">
+      <FoldableSection title="③ あるある失敗パターン">
         <ul className="flex flex-col gap-2">
           {c.commonFailures.map((f, i) => (
             <li
@@ -104,7 +135,7 @@ export function StrategyResult({ strategyId, modifier, onRestart, encodedParams 
             </li>
           ))}
         </ul>
-      </Section>
+      </FoldableSection>
 
       <Section title="勝ちパターンの型">
         <div className="rounded-xl border border-navy-300 bg-white p-5">
@@ -145,10 +176,12 @@ export function StrategyResult({ strategyId, modifier, onRestart, encodedParams 
         </div>
       </Section>
 
-      <Section title="あなたの子供希望に合わせて">
+      <Section title="あなたのライフプランに合わせて">
         <div className="rounded-xl bg-navy-50 p-5 text-sm leading-relaxed text-navy-800">
           <p className="mb-2 text-xs font-bold text-navy-600">
-            {modifier === "with-children" ? "▼ 子供希望ありの場合" : "▼ 子供不要/こだわらない場合"}
+            {modifier === "with-children"
+              ? "▼ 家族を持つことを軸にした戦略"
+              : "▼ 二人の時間を軸にした戦略"}
           </p>
           <p>
             {modifier === "with-children"
@@ -175,26 +208,30 @@ export function StrategyResult({ strategyId, modifier, onRestart, encodedParams 
 }
 
 function Header({
-  id,
   name,
   catchphrase,
   isFemale,
+  input,
 }: {
-  id: StrategyId;
   name: string;
   catchphrase: string;
   isFemale: boolean;
+  input: UserInput;
 }) {
   return (
     <header className="flex flex-col items-start gap-3">
+      <div className="w-full rounded-lg bg-navy-50 px-4 py-3 text-xs leading-relaxed text-navy-700">
+        <span className="mr-2 font-semibold text-navy-900">あなたの回答：</span>
+        {formatInput(input)}
+      </div>
       <span
-        className={`inline-flex items-center rounded-md px-3 py-1 text-sm font-bold tracking-wider ${
+        className={`inline-flex items-center rounded-md px-3 py-1 text-xs font-bold tracking-widest ${
           isFemale
             ? "border-2 border-accent-500 bg-white text-accent-600"
             : "bg-navy-800 text-white"
         }`}
       >
-        {id}
+        あなたの戦略タイプ
       </span>
       <h1 className="text-2xl font-bold leading-tight text-navy-900 md:text-3xl">
         {name}
@@ -217,6 +254,30 @@ function Section({
         {title}
       </h2>
       {children}
+    </section>
+  );
+}
+
+function FoldableSection({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section>
+      <details className="group">
+        <summary className="mb-3 flex cursor-pointer list-none items-center justify-between border-l-4 border-navy-700 pl-3 text-lg font-bold text-navy-900 [&::-webkit-details-marker]:hidden">
+          <span>{title}</span>
+          <span className="ml-2 flex items-center gap-1 text-xs font-normal text-navy-500">
+            <span className="group-open:hidden">タップで展開</span>
+            <span className="hidden group-open:inline">閉じる</span>
+            <span className="transition-transform group-open:rotate-180">▼</span>
+          </span>
+        </summary>
+        <div>{children}</div>
+      </details>
     </section>
   );
 }
