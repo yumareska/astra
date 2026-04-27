@@ -1,10 +1,16 @@
 "use client";
 
+import { trackEvent } from "@/lib/analytics/track";
+
 interface Props {
   onStart: () => void;
 }
 
 export function LpStep({ onStart }: Props) {
+  function handleStart() {
+    trackEvent("quiz_start");
+    onStart();
+  }
   return (
     <div className="-mx-5 -my-6 flex flex-col md:-my-10">
       <section className="relative overflow-hidden bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900 px-6 pb-14 pt-16 md:px-10 md:pb-20 md:pt-24">
@@ -57,7 +63,7 @@ export function LpStep({ onStart }: Props) {
 
         <button
           type="button"
-          onClick={onStart}
+          onClick={handleStart}
           className="mt-10 w-full rounded-xl bg-accent-500 px-6 py-5 text-base font-bold tracking-wide text-navy-900 shadow-lg shadow-accent-500/20 transition hover:bg-accent-600 active:scale-[0.98]"
         >
           今すぐ診断する（無料）
