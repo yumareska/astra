@@ -1,5 +1,7 @@
 import type { ChildModifier, ChildPreference } from "./types";
 
 export function applyChildModifier(pref: ChildPreference): ChildModifier {
-  return pref === "want" ? "with-children" : "without-children";
+  if (pref === "want") return "with-children";
+  if (pref === "not-want") return "without-children";
+  return "flexible";
 }

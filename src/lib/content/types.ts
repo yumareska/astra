@@ -63,4 +63,5 @@ export interface StrategyContent {
   proTip: string;
   firstActions: readonly [FirstActionItem, FirstActionItem, FirstActionItem];
   childModifier: ChildModifierBranch;
+  ownChildrenAdvice?: string;
 }

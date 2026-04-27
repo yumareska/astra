@@ -9,7 +9,7 @@ describe("applyChildModifier", () => {
     expect(applyChildModifier("not-want")).toBe("without-children");
   });
 
-  test("こだわらない → without-children", () => {
-    expect(applyChildModifier("no-preference")).toBe("without-children");
+  test("こだわらない → flexible", () => {
+    expect(applyChildModifier("no-preference")).toBe("flexible");
   });
 });

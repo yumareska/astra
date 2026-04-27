@@ -8,7 +8,9 @@ export function classifyStrategyId(input: UserInput): StrategyId {
 }
 
 function classifyMale(input: UserInput): StrategyId {
-  if (input.remarriage) return "M-Re";
+  if (input.remarriage) {
+    return input.income === "800plus" ? "M-Re-H" : "M-Re";
+  }
 
   if (input.residence === "rural" && input.age !== "20s") return "M-Rural";
 
@@ -41,7 +43,9 @@ function classifyFemale(input: UserInput): StrategyId {
     return input.residence === "urban" ? "F-30U" : "F-30L";
   }
 
-  if (input.age === "35-39") return "F-35";
+  if (input.age === "35-39") {
+    return input.residence === "urban" ? "F-35" : "F-35-Rural";
+  }
 
-  return "F-40";
+  return input.residence === "urban" ? "F-40" : "F-40-Rural";
 }

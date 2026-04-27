@@ -16,6 +16,7 @@ import { AgeStep } from "./steps/AgeStep";
 import { IncomeStep } from "./steps/IncomeStep";
 import { ResidenceStep } from "./steps/ResidenceStep";
 import { RemarriageStep } from "./steps/RemarriageStep";
+import { HasChildrenStep } from "./steps/HasChildrenStep";
 import { IncomeDisclosureStep } from "./steps/IncomeDisclosureStep";
 import { ChildrenStep } from "./steps/ChildrenStep";
 import { StrategyResult } from "@/components/result/StrategyResult";
@@ -86,6 +87,13 @@ export function QuizContainer({ initialSearch }: QuizContainerProps) {
         />
       )}
 
+      {quiz.currentStep === "hasChildren" && (
+        <HasChildrenStep
+          onBack={quiz.back}
+          onSelect={(h: boolean) => quiz.next({ hasChildren: h })}
+        />
+      )}
+
       {quiz.currentStep === "incomeDisclosure" && (
         <IncomeDisclosureStep
           onBack={quiz.back}
@@ -121,7 +129,8 @@ function ResultView({ answers, onRestart, encodedParams }: ResultViewProps) {
     !answers.age ||
     !answers.residence ||
     answers.remarriage === undefined ||
-    !answers.childPreference
+    !answers.childPreference ||
+    (answers.remarriage === true && answers.hasChildren === undefined)
   ) {
     return (
       <div className="text-navy-700">
@@ -141,6 +150,7 @@ function ResultView({ answers, onRestart, encodedParams }: ResultViewProps) {
     income: answers.income,
     residence: answers.residence,
     remarriage: answers.remarriage,
+    hasChildren: answers.hasChildren,
     incomeDisclosure: answers.incomeDisclosure,
     childPreference: answers.childPreference,
   };

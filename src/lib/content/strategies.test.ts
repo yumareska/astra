@@ -9,18 +9,21 @@ const ALL_IDS: StrategyId[] = [
   "M-35",
   "M-40",
   "M-Re",
+  "M-Re-H",
   "M-Rural",
   "F-20",
   "F-30U",
   "F-30L",
   "F-35",
+  "F-35-Rural",
   "F-Car",
   "F-40",
+  "F-40-Rural",
   "F-Re",
 ];
 
 describe("strategies コンテンツスキーマ", () => {
-  test("全15IDが存在する", () => {
+  test("全18IDが存在する", () => {
     expect(Object.keys(strategies).sort()).toEqual([...ALL_IDS].sort());
   });
 

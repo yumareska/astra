@@ -65,7 +65,7 @@ describe("useQuizStep", () => {
     expect(result.current.currentStep).toBe("children");
   });
 
-  test("女性・再婚希望フロー: incomeDisclosureはスキップされる", () => {
+  test("離婚歴ありフロー: hasChildrenステップが挿入される", () => {
     const { result } = renderHook(() => useQuizStep());
     act(() => result.current.start());
     act(() => result.current.next({ gender: "female" }));
@@ -73,6 +73,31 @@ describe("useQuizStep", () => {
     act(() => result.current.next({ income: "500-799" }));
     act(() => result.current.next({ residence: "urban" }));
     act(() => result.current.next({ remarriage: true }));
+    expect(result.current.currentStep).toBe("hasChildren");
+    act(() => result.current.next({ hasChildren: false }));
+    expect(result.current.currentStep).toBe("children");
+  });
+
+  test("離婚歴あり女性: incomeDisclosureはスキップされる", () => {
+    const { result } = renderHook(() => useQuizStep());
+    act(() => result.current.start());
+    act(() => result.current.next({ gender: "female" }));
+    act(() => result.current.next({ age: "30-34" }));
+    act(() => result.current.next({ income: "500-799" }));
+    act(() => result.current.next({ residence: "urban" }));
+    act(() => result.current.next({ remarriage: true }));
+    act(() => result.current.next({ hasChildren: true }));
+    expect(result.current.currentStep).toBe("children");
+  });
+
+  test("初婚女性・20代: incomeDisclosureはスキップされる（30-34/35-39のみ対象）", () => {
+    const { result } = renderHook(() => useQuizStep());
+    act(() => result.current.start());
+    act(() => result.current.next({ gender: "female" }));
+    act(() => result.current.next({ age: "20s" }));
+    act(() => result.current.next({ income: "500-799" }));
+    act(() => result.current.next({ residence: "urban" }));
+    act(() => result.current.next({ remarriage: false }));
     expect(result.current.currentStep).toBe("children");
   });
 

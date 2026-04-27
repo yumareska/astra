@@ -11,15 +11,15 @@ interface Props {
 export function RemarriageStep({ onSelect, onBack }: Props) {
   return (
     <StepFrame
-      title="Q5. 再婚をご希望ですか？"
-      subtitle="離婚歴の有無・再婚を希望されているかをお答えください"
+      title="Q5. ご結婚歴はありますか？"
+      subtitle="戦略の判定に使います。事実をお答えください"
       onBack={onBack}
     >
-      <QuizButton variant="secondary" onClick={() => onSelect(true)}>
-        はい（再婚希望）
-      </QuizButton>
       <QuizButton variant="secondary" onClick={() => onSelect(false)}>
-        いいえ（初婚）
+        初婚（結婚歴なし）
+      </QuizButton>
+      <QuizButton variant="secondary" onClick={() => onSelect(true)}>
+        離婚歴あり
       </QuizButton>
     </StepFrame>
   );

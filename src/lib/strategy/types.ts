@@ -14,6 +14,7 @@ export interface UserInput {
   income?: IncomeBand;
   residence: ResidenceArea;
   remarriage: boolean;
+  hasChildren?: boolean;
   incomeDisclosure?: boolean;
   childPreference: ChildPreference;
 }
@@ -26,6 +27,7 @@ export type MaleStrategyId =
   | "M-35"
   | "M-40"
   | "M-Re"
+  | "M-Re-H"
   | "M-Rural";
 
 export type FemaleStrategyId =
@@ -33,10 +35,12 @@ export type FemaleStrategyId =
   | "F-30U"
   | "F-30L"
   | "F-35"
+  | "F-35-Rural"
   | "F-40"
+  | "F-40-Rural"
   | "F-Re"
   | "F-Car";
 
 export type StrategyId = MaleStrategyId | FemaleStrategyId;
 
-export type ChildModifier = "with-children" | "without-children";
+export type ChildModifier = "with-children" | "without-children" | "flexible";

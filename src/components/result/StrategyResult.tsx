@@ -37,7 +37,11 @@ function formatInput(input: UserInput): string {
   parts.push(`${AGE_LABEL[input.age]}・${input.gender === "male" ? "男性" : "女性"}`);
   if (input.income) parts.push(INCOME_LABEL[input.income]);
   parts.push(input.residence === "urban" ? "都市部" : "地方");
-  parts.push(input.remarriage ? "再婚" : "初婚");
+  if (input.remarriage) {
+    parts.push(input.hasChildren ? "離婚歴あり・子供あり" : "離婚歴あり");
+  } else {
+    parts.push("初婚");
+  }
   parts.push(CHILD_LABEL[input.childPreference]);
   return parts.join(" / ");
 }
@@ -177,19 +181,44 @@ export function StrategyResult({ strategyId, modifier, onRestart, encodedParams,
       </Section>
 
       <Section title="あなたのライフプランに合わせて">
-        <div className="rounded-xl bg-navy-50 p-5 text-sm leading-relaxed text-navy-800">
-          <p className="mb-2 text-xs font-bold text-navy-600">
-            {modifier === "with-children"
-              ? "▼ 家族を持つことを軸にした戦略"
-              : "▼ 二人の時間を軸にした戦略"}
-          </p>
-          <p>
-            {modifier === "with-children"
-              ? c.childModifier.withChildren
-              : c.childModifier.withoutChildren}
-          </p>
-        </div>
+        {modifier === "flexible" ? (
+          <div className="grid gap-3 md:grid-cols-2">
+            <div className="rounded-xl bg-navy-50 p-5 text-sm leading-relaxed text-navy-800">
+              <p className="mb-2 text-xs font-bold text-navy-600">
+                ▼ 家族を持つことを軸にした戦略
+              </p>
+              <p>{c.childModifier.withChildren}</p>
+            </div>
+            <div className="rounded-xl bg-navy-50 p-5 text-sm leading-relaxed text-navy-800">
+              <p className="mb-2 text-xs font-bold text-navy-600">
+                ▼ 二人の時間を軸にした戦略
+              </p>
+              <p>{c.childModifier.withoutChildren}</p>
+            </div>
+          </div>
+        ) : (
+          <div className="rounded-xl bg-navy-50 p-5 text-sm leading-relaxed text-navy-800">
+            <p className="mb-2 text-xs font-bold text-navy-600">
+              {modifier === "with-children"
+                ? "▼ 家族を持つことを軸にした戦略"
+                : "▼ 二人の時間を軸にした戦略"}
+            </p>
+            <p>
+              {modifier === "with-children"
+                ? c.childModifier.withChildren
+                : c.childModifier.withoutChildren}
+            </p>
+          </div>
+        )}
       </Section>
+
+      {input.remarriage && input.hasChildren && c.ownChildrenAdvice && (
+        <Section title="お子様がいらっしゃる場合の追加アドバイス">
+          <div className="rounded-xl border-l-4 border-accent-500 bg-accent-50/40 p-5 text-sm leading-relaxed text-navy-800" style={{ backgroundColor: "rgba(197,155,90,0.08)" }}>
+            <p>{c.ownChildrenAdvice}</p>
+          </div>
+        </Section>
+      )}
 
       <CtaBlock strategyId={strategyId} />
 

@@ -12,6 +12,7 @@ export type StepId =
   | "income"
   | "residence"
   | "remarriage"
+  | "hasChildren"
   | "incomeDisclosure"
   | "children"
   | "result";
@@ -27,7 +28,14 @@ const BASE_STEPS: StepId[] = [
 
 function computeSteps(answers: Answers): StepId[] {
   const steps: StepId[] = [...BASE_STEPS];
-  if (answers.gender === "female" && answers.remarriage === false) {
+  if (answers.remarriage === true) {
+    steps.push("hasChildren");
+  }
+  if (
+    answers.gender === "female" &&
+    answers.remarriage === false &&
+    (answers.age === "30-34" || answers.age === "35-39")
+  ) {
     steps.push("incomeDisclosure");
   }
   steps.push("children");
@@ -47,13 +55,17 @@ export interface UseQuizStepReturn {
 }
 
 function isComplete(a: Answers): boolean {
-  return !!(
-    a.gender &&
-    a.age &&
-    a.residence !== undefined &&
-    a.remarriage !== undefined &&
-    a.childPreference
-  );
+  if (
+    !a.gender ||
+    !a.age ||
+    a.residence === undefined ||
+    a.remarriage === undefined ||
+    !a.childPreference
+  ) {
+    return false;
+  }
+  if (a.remarriage === true && a.hasChildren === undefined) return false;
+  return true;
 }
 
 export function useQuizStep(initialAnswers?: Answers): UseQuizStepReturn {

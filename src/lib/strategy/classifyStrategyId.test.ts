@@ -56,14 +56,23 @@ describe("classifyStrategyId - 男性8パターン", () => {
     ).toBe("M-40");
   });
 
-  test("M-Re: 男性・再婚希望は全条件より最優先", () => {
+  test("M-Re: 男性・離婚歴あり・年収800万未満は M-Re", () => {
     expect(classifyStrategyId({ ...base, remarriage: true })).toBe("M-Re");
     expect(
       classifyStrategyId({ ...base, age: "20s", residence: "rural", remarriage: true }),
     ).toBe("M-Re");
     expect(
-      classifyStrategyId({ ...base, age: "40+", income: "800plus", remarriage: true }),
+      classifyStrategyId({ ...base, age: "40+", income: "under500", remarriage: true }),
     ).toBe("M-Re");
+  });
+
+  test("M-Re-H: 男性・離婚歴あり・年収800万以上は M-Re-H", () => {
+    expect(
+      classifyStrategyId({ ...base, income: "800plus", remarriage: true }),
+    ).toBe("M-Re-H");
+    expect(
+      classifyStrategyId({ ...base, age: "40+", income: "800plus", remarriage: true }),
+    ).toBe("M-Re-H");
   });
 
   test("M-Rural: 30〜34歳・地方 → M-Rural（年収問わず）", () => {
@@ -126,18 +135,24 @@ describe("classifyStrategyId - 女性7パターン", () => {
     ).toBe("F-30L");
   });
 
-  test("F-35: 35〜39歳 → F-35（居住地問わず）", () => {
+  test("F-35: 35〜39歳・都市部 → F-35", () => {
     expect(
       classifyStrategyId({ ...fBase, age: "35-39", residence: "urban", incomeDisclosure: false }),
     ).toBe("F-35");
-    expect(
-      classifyStrategyId({ ...fBase, age: "35-39", residence: "rural", incomeDisclosure: false }),
-    ).toBe("F-35");
   });
 
-  test("F-40: 40代以上 → F-40（居住地問わず）", () => {
+  test("F-35-Rural: 35〜39歳・地方 → F-35-Rural", () => {
+    expect(
+      classifyStrategyId({ ...fBase, age: "35-39", residence: "rural", incomeDisclosure: false }),
+    ).toBe("F-35-Rural");
+  });
+
+  test("F-40: 40代以上・都市部 → F-40", () => {
     expect(classifyStrategyId({ ...fBase, age: "40+", residence: "urban" })).toBe("F-40");
-    expect(classifyStrategyId({ ...fBase, age: "40+", residence: "rural" })).toBe("F-40");
+  });
+
+  test("F-40-Rural: 40代以上・地方 → F-40-Rural", () => {
+    expect(classifyStrategyId({ ...fBase, age: "40+", residence: "rural" })).toBe("F-40-Rural");
   });
 
   test("F-Re: 女性・再婚希望は全条件より最優先", () => {

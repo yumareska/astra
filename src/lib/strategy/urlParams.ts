@@ -23,6 +23,7 @@ export function encodeAnswers(answers: Answers): string {
   if (answers.income) p.set("i", answers.income);
   if (answers.residence) p.set("r", answers.residence === "urban" ? "u" : "r");
   if (answers.remarriage !== undefined) p.set("rm", answers.remarriage ? "1" : "0");
+  if (answers.hasChildren !== undefined) p.set("hc", answers.hasChildren ? "1" : "0");
   if (answers.incomeDisclosure !== undefined) p.set("id", answers.incomeDisclosure ? "1" : "0");
   if (answers.childPreference) p.set("c", CHILD_ENCODE[answers.childPreference]);
   return p.toString();
@@ -56,6 +57,9 @@ export function decodeAnswers(search: string): Answers | null {
 
   const idRaw = p.get("id");
   if (idRaw !== null) answers.incomeDisclosure = idRaw === "1";
+
+  const hcRaw = p.get("hc");
+  if (hcRaw !== null) answers.hasChildren = hcRaw === "1";
 
   return answers;
 }
