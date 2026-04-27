@@ -8,6 +8,7 @@ interface StepFrameProps {
   children: ReactNode;
   onBack?: () => void;
   canGoBack?: boolean;
+  stepLabel?: string;
 }
 
 export function StepFrame({
@@ -16,12 +17,22 @@ export function StepFrame({
   children,
   onBack,
   canGoBack = true,
+  stepLabel,
 }: StepFrameProps) {
   return (
     <div className="flex flex-col">
-      <div className="mb-6">
-        <h2 className="text-xl font-bold text-navy-900 md:text-2xl">{title}</h2>
-        {subtitle && <p className="mt-2 text-sm text-navy-500">{subtitle}</p>}
+      <div className="mb-7">
+        {stepLabel && (
+          <p className="mb-2 font-display text-[10px] tracking-[0.3em] text-accent-600">
+            {stepLabel}
+          </p>
+        )}
+        <h2 className="text-xl font-bold leading-snug text-navy-900 md:text-2xl">
+          {title}
+        </h2>
+        {subtitle && (
+          <p className="mt-2 text-sm leading-relaxed text-navy-500">{subtitle}</p>
+        )}
       </div>
       <div className="flex flex-col gap-3">{children}</div>
       {canGoBack && onBack && (

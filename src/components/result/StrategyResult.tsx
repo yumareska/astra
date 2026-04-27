@@ -65,31 +65,35 @@ export function StrategyResult({ strategyId, modifier, onRestart, encodedParams,
       <article className="flex flex-col gap-10 pb-24">
         <Header name={c.name} catchphrase={c.catchphrase} isFemale={isFemale} input={input} />
 
-        <Section title="① 共感フック">
+        <Section title="共感フック" label="01  EMPATHY" variant="accent">
           <p className="mb-3 text-navy-700">{c.empathyHook.intro}</p>
           <ul className="space-y-2">
             {c.empathyHook.checks.map((check, i) => (
               <li
                 key={i}
-                className="flex items-start gap-3 rounded-lg border border-navy-100 bg-navy-50 p-3 text-sm text-navy-800"
+                className="flex items-start gap-3 rounded-lg bg-white p-3 text-sm text-navy-800 shadow-sm ring-1 ring-navy-100"
               >
-                <span className="mt-0.5 text-accent-600">☐</span>
+                <span className="mt-0.5 font-bold text-accent-600">☐</span>
                 <span>{check}</span>
               </li>
             ))}
           </ul>
         </Section>
 
-        <Section title="② 市場データ">
-          <p className="leading-relaxed text-navy-700">{c.marketData.body}</p>
+        <Section title="市場データ" label="02  MARKET">
+          <div className="rounded-xl bg-white p-5 leading-relaxed text-navy-700 shadow-sm ring-1 ring-navy-100">
+            {c.marketData.body}
+          </div>
         </Section>
 
-        <Section title="ポジション解説">
-          <p className="leading-relaxed text-navy-700">{c.positionAnalysis}</p>
+        <Section title="ポジション解説" label="03  POSITION">
+          <div className="rounded-xl bg-white p-5 leading-relaxed text-navy-700 shadow-sm ring-1 ring-navy-100">
+            {c.positionAnalysis}
+          </div>
         </Section>
 
-        <FoldableSection title="ストーリー事例">
-          <div className="rounded-xl border border-navy-200 bg-white p-5 text-sm leading-relaxed">
+        <FoldableSection title="ストーリー事例" label="CASE STUDY">
+          <div className="rounded-xl bg-white p-5 text-sm leading-relaxed shadow-sm ring-1 ring-navy-100">
             <p className="mb-3 font-bold text-navy-900">{c.story.personaLabel}</p>
             <div className="space-y-2 text-navy-700">
               <Row label="Before" body={c.story.before} />
@@ -100,13 +104,12 @@ export function StrategyResult({ strategyId, modifier, onRestart, encodedParams,
         </FoldableSection>
 
         <div className="grid gap-4 md:grid-cols-2">
-          <Section title="DO（推奨）">
+          <Section title="DO（推奨）" label="DO" variant="accent">
             <ul className="flex flex-col gap-3">
               {c.dos.map((d, i) => (
                 <li
                   key={i}
-                  className="rounded-lg border-l-4 border-accent-500 bg-accent-50/40 p-3 text-sm"
-                  style={{ backgroundColor: "rgba(197,155,90,0.08)" }}
+                  className="rounded-lg border-l-4 border-accent-500 bg-accent-50 p-3 text-sm shadow-sm"
                 >
                   <p className="font-semibold text-navy-900">{d.action}</p>
                   <p className="mt-1 text-navy-600">→ {d.reason}</p>
@@ -114,12 +117,12 @@ export function StrategyResult({ strategyId, modifier, onRestart, encodedParams,
               ))}
             </ul>
           </Section>
-          <Section title="DON'T（NG）">
+          <Section title="DON'T（NG）" label="DON'T" variant="muted">
             <ul className="flex flex-col gap-3">
               {c.donts.map((d, i) => (
                 <li
                   key={i}
-                  className="rounded-lg border-l-4 border-red-400 bg-red-50 p-3 text-sm"
+                  className="rounded-lg border-l-4 border-red-400 bg-red-50 p-3 text-sm shadow-sm"
                 >
                   <p className="font-semibold text-navy-900">{d.action}</p>
                   <p className="mt-1 text-navy-600">→ {d.reason}</p>
@@ -129,12 +132,12 @@ export function StrategyResult({ strategyId, modifier, onRestart, encodedParams,
           </Section>
         </div>
 
-        <FoldableSection title="③ あるある失敗パターン">
+        <FoldableSection title="あるある失敗パターン" label="PITFALLS">
           <ul className="flex flex-col gap-2">
             {c.commonFailures.map((f, i) => (
               <li
                 key={i}
-                className="rounded-lg bg-navy-50 p-3 text-sm text-navy-800"
+                className="rounded-lg bg-navy-50 p-3 text-sm text-navy-800 ring-1 ring-navy-100"
               >
                 <span className="font-bold text-navy-900">{f.label}:</span> {f.body}
               </li>
@@ -142,8 +145,8 @@ export function StrategyResult({ strategyId, modifier, onRestart, encodedParams,
           </ul>
         </FoldableSection>
 
-        <Section title="勝ちパターンの型">
-          <div className="rounded-xl border border-navy-300 bg-white p-5">
+        <Section title="勝ちパターンの型" label="WINNING TEMPLATE" variant="accent">
+          <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-navy-200">
             <div className="mb-3 flex items-center justify-between gap-3">
               <p className="text-sm font-semibold text-navy-900">
                 {c.winningPattern.title}
@@ -156,26 +159,31 @@ export function StrategyResult({ strategyId, modifier, onRestart, encodedParams,
           </div>
         </Section>
 
-        <Section title="PRO TIP（アストラ独自）">
-          <div className="rounded-xl border-2 border-accent-500 bg-white p-5">
-            <p className="text-sm font-bold tracking-wider text-accent-600">
-              ◆ ASTRA INSIGHT
+        <Section title="PRO TIP" label="ASTRA INSIGHT" variant="accent">
+          <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-navy-900 to-navy-800 p-6 text-white shadow-lg">
+            <div
+              className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-accent-500/10 blur-2xl"
+              aria-hidden
+            />
+            <p className="font-display text-[11px] tracking-[0.4em] text-accent-400">
+              ◆  ASTRA INSIGHT
             </p>
-            <p className="mt-2 leading-relaxed text-navy-800">{c.proTip}</p>
+            <p className="mt-3 leading-relaxed text-navy-50">{c.proTip}</p>
           </div>
         </Section>
 
-        <Section title="First Action 3段階">
+        <Section title="First Action 3段階" label="ACTION PLAN" variant="accent">
           <div className="grid gap-3 md:grid-cols-3">
             {c.firstActions.map((a, i) => (
               <div
                 key={i}
-                className="flex flex-col gap-2 rounded-xl border border-navy-200 bg-white p-4"
+                className="flex flex-col gap-2 rounded-xl bg-white p-4 shadow-sm ring-1 ring-navy-100"
               >
-                <span className="inline-block self-start rounded-full bg-navy-800 px-3 py-1 text-xs font-bold text-white">
+                <span className="inline-flex items-center gap-1.5 self-start rounded-full bg-navy-900 px-3 py-1 text-[10px] font-bold tracking-wider text-white">
+                  <span className="h-1.5 w-1.5 rounded-full bg-accent-400" />
                   {WHEN_LABEL[a.when]}
                 </span>
-                <p className="text-sm text-navy-800">{a.action}</p>
+                <p className="text-sm leading-relaxed text-navy-800">{a.action}</p>
               </div>
             ))}
           </div>
@@ -183,28 +191,26 @@ export function StrategyResult({ strategyId, modifier, onRestart, encodedParams,
 
         <CtaBlock strategyId={strategyId} />
 
-        <Section title="あなたのライフプランに合わせて">
+        <Section title="あなたのライフプランに合わせて" label="LIFE PLAN">
           {modifier === "flexible" ? (
             <div className="grid gap-3 md:grid-cols-2">
-              <div className="rounded-xl bg-navy-50 p-5 text-sm leading-relaxed text-navy-800">
-                <p className="mb-2 text-xs font-bold text-navy-600">
-                  ▼ 家族を持つことを軸にした戦略
+              <div className="rounded-xl bg-white p-5 text-sm leading-relaxed text-navy-800 shadow-sm ring-1 ring-navy-100">
+                <p className="mb-2 font-display text-[10px] tracking-[0.25em] text-accent-600">
+                  WITH CHILDREN
                 </p>
                 <p>{c.childModifier.withChildren}</p>
               </div>
-              <div className="rounded-xl bg-navy-50 p-5 text-sm leading-relaxed text-navy-800">
-                <p className="mb-2 text-xs font-bold text-navy-600">
-                  ▼ 二人の時間を軸にした戦略
+              <div className="rounded-xl bg-white p-5 text-sm leading-relaxed text-navy-800 shadow-sm ring-1 ring-navy-100">
+                <p className="mb-2 font-display text-[10px] tracking-[0.25em] text-accent-600">
+                  TWO OF YOU
                 </p>
                 <p>{c.childModifier.withoutChildren}</p>
               </div>
             </div>
           ) : (
-            <div className="rounded-xl bg-navy-50 p-5 text-sm leading-relaxed text-navy-800">
-              <p className="mb-2 text-xs font-bold text-navy-600">
-                {modifier === "with-children"
-                  ? "▼ 家族を持つことを軸にした戦略"
-                  : "▼ 二人の時間を軸にした戦略"}
+            <div className="rounded-xl bg-white p-5 text-sm leading-relaxed text-navy-800 shadow-sm ring-1 ring-navy-100">
+              <p className="mb-2 font-display text-[10px] tracking-[0.25em] text-accent-600">
+                {modifier === "with-children" ? "WITH CHILDREN" : "TWO OF YOU"}
               </p>
               <p>
                 {modifier === "with-children"
@@ -216,8 +222,8 @@ export function StrategyResult({ strategyId, modifier, onRestart, encodedParams,
         </Section>
 
         {input.remarriage && input.hasChildren && c.ownChildrenAdvice && (
-          <Section title="お子様がいらっしゃる場合の追加アドバイス">
-            <div className="rounded-xl border-l-4 border-accent-500 bg-accent-50/40 p-5 text-sm leading-relaxed text-navy-800" style={{ backgroundColor: "rgba(197,155,90,0.08)" }}>
+          <Section title="お子様がいらっしゃる場合のアドバイス" label="FOR PARENTS" variant="accent">
+            <div className="rounded-xl border-l-4 border-accent-500 bg-accent-50 p-5 text-sm leading-relaxed text-navy-800 shadow-sm">
               <p>{c.ownChildrenAdvice}</p>
             </div>
           </Section>
@@ -252,40 +258,88 @@ function Header({
   input: UserInput;
 }) {
   return (
-    <header className="flex flex-col items-start gap-3">
-      <div className="w-full rounded-lg bg-navy-50 px-4 py-3 text-xs leading-relaxed text-navy-700">
-        <span className="mr-2 font-semibold text-navy-900">あなたの回答：</span>
-        {formatInput(input)}
+    <header className="-mx-5 -mt-6 overflow-hidden md:-mt-10">
+      <div className="relative bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900 px-6 pb-10 pt-12 md:px-10 md:pb-14 md:pt-16">
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 0% 0%, #c59b5a 0%, transparent 50%), radial-gradient(circle at 100% 100%, #c59b5a 0%, transparent 50%)",
+          }}
+          aria-hidden
+        />
+        <div className="relative flex flex-col gap-5">
+          <div className="flex items-center gap-3">
+            <span className="h-px flex-1 bg-accent-500/40" aria-hidden />
+            <span
+              className={`font-display text-[11px] tracking-[0.4em] ${
+                isFemale ? "text-accent-300" : "text-accent-400"
+              }`}
+            >
+              YOUR STRATEGY
+            </span>
+            <span className="h-px flex-1 bg-accent-500/40" aria-hidden />
+          </div>
+
+          <h1 className="text-center font-display text-4xl font-medium leading-[1.1] text-white md:text-5xl">
+            {name}
+          </h1>
+
+          <div className="mx-auto h-px w-12 bg-accent-500" aria-hidden />
+
+          <p className="text-center text-sm leading-relaxed text-navy-100 md:text-base">
+            {catchphrase}
+          </p>
+        </div>
       </div>
-      <span
-        className={`inline-flex items-center rounded-md px-3 py-1 text-xs font-bold tracking-widest ${
-          isFemale
-            ? "border-2 border-accent-500 bg-white text-accent-600"
-            : "bg-navy-800 text-white"
-        }`}
-      >
-        あなたの戦略タイプ
-      </span>
-      <h1 className="text-2xl font-bold leading-tight text-navy-900 md:text-3xl">
-        {name}
-      </h1>
-      <p className="leading-relaxed text-navy-700">{catchphrase}</p>
+
+      <div className="border-y border-navy-100 bg-navy-50 px-5 py-3 text-[11px] leading-relaxed text-navy-700 md:px-10">
+        <span className="mr-2 font-semibold text-navy-900">あなたの回答</span>
+        <span className="text-navy-600">{formatInput(input)}</span>
+      </div>
     </header>
   );
 }
 
+type SectionVariant = "primary" | "accent" | "muted";
+
+const SECTION_BORDER: Record<SectionVariant, string> = {
+  primary: "border-navy-700",
+  accent: "border-accent-500",
+  muted: "border-navy-300",
+};
+
+const SECTION_LABEL: Record<SectionVariant, string> = {
+  primary: "text-navy-500",
+  accent: "text-accent-600",
+  muted: "text-navy-400",
+};
+
 function Section({
   title,
+  label,
+  variant = "primary",
   children,
 }: {
   title: string;
+  label?: string;
+  variant?: SectionVariant;
   children: React.ReactNode;
 }) {
   return (
     <section>
-      <h2 className="mb-3 border-l-4 border-navy-700 pl-3 text-lg font-bold text-navy-900">
-        {title}
-      </h2>
+      <div className={`mb-4 border-l-4 ${SECTION_BORDER[variant]} pl-3`}>
+        {label && (
+          <p
+            className={`font-display text-[10px] tracking-[0.3em] ${SECTION_LABEL[variant]}`}
+          >
+            {label}
+          </p>
+        )}
+        <h2 className="text-lg font-bold leading-tight text-navy-900">
+          {title}
+        </h2>
+      </div>
       {children}
     </section>
   );
@@ -293,17 +347,34 @@ function Section({
 
 function FoldableSection({
   title,
+  label,
+  variant = "muted",
   children,
 }: {
   title: string;
+  label?: string;
+  variant?: SectionVariant;
   children: React.ReactNode;
 }) {
   return (
     <section>
       <details className="group">
-        <summary className="mb-3 flex cursor-pointer list-none items-center justify-between border-l-4 border-navy-700 pl-3 text-lg font-bold text-navy-900 [&::-webkit-details-marker]:hidden">
-          <span>{title}</span>
-          <span className="ml-2 flex items-center gap-1 text-xs font-normal text-navy-500">
+        <summary
+          className={`mb-3 flex cursor-pointer list-none items-center justify-between border-l-4 ${SECTION_BORDER[variant]} pl-3 [&::-webkit-details-marker]:hidden`}
+        >
+          <div>
+            {label && (
+              <p
+                className={`font-display text-[10px] tracking-[0.3em] ${SECTION_LABEL[variant]}`}
+              >
+                {label}
+              </p>
+            )}
+            <span className="text-lg font-bold leading-tight text-navy-900">
+              {title}
+            </span>
+          </div>
+          <span className="ml-2 flex shrink-0 items-center gap-1 text-xs font-normal text-navy-500">
             <span className="group-open:hidden">タップで展開</span>
             <span className="hidden group-open:inline">閉じる</span>
             <span className="transition-transform group-open:rotate-180">▼</span>
@@ -352,7 +423,10 @@ function SaveBlock({ encodedParams }: { encodedParams?: string }) {
   };
 
   return (
-    <div className="rounded-xl border border-navy-200 bg-navy-50 p-5">
+    <div className="rounded-xl bg-navy-50 p-5 shadow-sm ring-1 ring-navy-100">
+      <p className="mb-1 font-display text-[10px] tracking-[0.3em] text-navy-500">
+        SAVE FOR LATER
+      </p>
       <p className="mb-1 text-sm font-semibold text-navy-900">
         あとで見返すために保存する
       </p>
@@ -420,11 +494,21 @@ function FloatingCtaBar({ strategyId }: { strategyId: StrategyId }) {
 
 function CtaBlock({ strategyId }: { strategyId: StrategyId }) {
   return (
-    <div className="rounded-2xl bg-navy-800 p-6 text-white md:p-8">
-      <p className="text-sm font-semibold tracking-wider text-accent-500">
-        ASTRA - オーダーメイド戦略作成面談（無料・オンライン）
+    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900 p-6 text-white shadow-xl md:p-8">
+      <div
+        className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-accent-500/10 blur-3xl"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute -bottom-20 -left-16 h-48 w-48 rounded-full bg-accent-500/10 blur-3xl"
+        aria-hidden
+      />
+      <div className="relative">
+      <p className="font-display text-[11px] tracking-[0.35em] text-accent-400">
+        ASTRA  —  オーダーメイド戦略作成面談
       </p>
-      <h2 className="mt-2 text-xl font-bold leading-snug md:text-2xl">
+      <p className="mt-1 text-xs text-navy-300">無料・オンライン</p>
+      <h2 className="mt-4 text-xl font-bold leading-snug md:text-2xl">
         この診断は「スペック別」の戦略です。
         <br />
         あなたの本当の勝ち筋は、もっと先にあります。
@@ -485,6 +569,7 @@ function CtaBlock({ strategyId }: { strategyId: StrategyId }) {
       <p className="mt-4 text-center text-xs text-navy-200">
         ※「相談」ではなく「個別戦略の作成」の場です。
       </p>
+      </div>
     </div>
   );
 }

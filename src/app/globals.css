@@ -11,8 +11,18 @@
   --color-navy-700: #2e4361;
   --color-navy-800: #1f2d42;
   --color-navy-900: #121a28;
+  --color-accent-50: #fbf6ec;
+  --color-accent-100: #f3e6c9;
+  --color-accent-200: #e8d3a3;
+  --color-accent-300: #dabe7c;
+  --color-accent-400: #cdaa66;
   --color-accent-500: #c59b5a;
   --color-accent-600: #a87f3f;
+  --color-accent-700: #876530;
+  --font-display: var(--font-cormorant), "Hiragino Mincho ProN", "YuMincho", serif;
+  --font-sans:
+    "Hiragino Sans", "Hiragino Kaku Gothic ProN", "BIZ UDPGothic",
+    "Noto Sans JP", system-ui, -apple-system, sans-serif;
 }
 
 :root {
@@ -24,8 +34,10 @@ html,
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family:
-    "Hiragino Sans", "Hiragino Kaku Gothic ProN", "BIZ UDPGothic",
-    "Noto Sans JP", system-ui, -apple-system, sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+}
+
+.font-display {
+  font-family: var(--font-display);
 }
