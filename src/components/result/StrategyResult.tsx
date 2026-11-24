@@ -29,7 +29,7 @@ const INCOME_LABEL: Record<NonNullable<UserInput["income"]>, string> = {
 const CHILD_LABEL: Record<UserInput["childPreference"], string> = {
   want: "子どもを希望",
   "not-want": "子どもを望まない",
-  "no-preference": "子どもについて未定",
+  "no-preference": "子どもの希望は柔軟",
 };
 
 function formatInput(input: UserInput): string {
@@ -75,7 +75,7 @@ export function StrategyResult({ strategyId, modifier, onRestart, encodedParams,
                 key={i}
                 className="flex items-start gap-3 rounded-lg bg-white p-3 text-sm text-navy-800 shadow-sm ring-1 ring-navy-100"
               >
-                <span className="mt-0.5 font-bold text-accent-600">☐</span>
+                <span className="mt-0.5 font-bold text-accent-600" aria-hidden>•</span>
                 <span>{check}</span>
               </li>
             ))}
