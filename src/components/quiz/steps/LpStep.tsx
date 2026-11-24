@@ -23,17 +23,13 @@ export function LpStep({ onStart }: Props) {
           aria-hidden
         />
         <div className="relative">
-          <p className="mb-1 font-display text-xs tracking-[0.4em] text-accent-400">
-            ASTRA
-          </p>
-          <p className="mb-8 text-[11px] tracking-[0.25em] text-navy-200">
-            スペック別・婚活戦略診断
-          </p>
+          <p className="mb-1 font-display text-xs tracking-[0.4em] text-accent-400">ASTRA</p>
+          <p className="mb-8 text-[11px] tracking-[0.25em] text-navy-200">婚活戦略診断</p>
 
           <h1 className="font-display text-4xl font-medium leading-[1.15] text-white md:text-5xl">
             あなたの婚活、
             <br />
-            <span className="text-accent-400">勝ち筋</span>がわかる。
+            <span className="text-accent-400">次の一歩</span>を考える。
           </h1>
 
           <div className="mt-8 h-px w-16 bg-accent-500" aria-hidden />
@@ -41,23 +37,22 @@ export function LpStep({ onStart }: Props) {
           <p className="mt-6 text-sm leading-loose text-navy-100 md:text-base">
             性別・年齢・年収・居住地など数問に答えるだけ。
             <br />
-            IBJ結婚データに基づく
-            <span className="font-semibold text-white">あなた専用の戦略</span>
-            をお届けします。
+            <span className="font-semibold text-white">婚活の進め方を考えるヒント</span>
+            をお届けします。結果はご自身の状況を振り返るための参考です。
           </p>
         </div>
       </section>
 
       <section className="px-6 py-10 md:px-10 md:py-14">
         <ul className="space-y-4 text-sm text-navy-700 md:text-base">
-          <FeatureItem label="ABOUT" title="所要時間：約2分・6問">
-            選択式だから直感的に答えられます
+          <FeatureItem label="ABOUT" title="数問に答えて、今の状況を整理">
+            選択式です。回答内容により質問数が変わります
           </FeatureItem>
-          <FeatureItem label="PRIVACY" title="データ保存なし">
-            診断結果はサーバーに保存されません
+          <FeatureItem label="PRIVACY" title="回答の保存について">
+            回答は診断用データベースに保存しません。結果の保存用URLには回答内容が含まれます
           </FeatureItem>
-          <FeatureItem label="OUTPUT" title="15種類の戦略から最適解を提示">
-            DO / DON&apos;T と具体的アクションつき
+          <FeatureItem label="OUTPUT" title="回答に応じた行動のヒントを表示">
+            希望や実際の活動に合わせて、取り入れる内容を選べます
           </FeatureItem>
         </ul>
 
@@ -73,7 +68,7 @@ export function LpStep({ onStart }: Props) {
         </button>
 
         <p className="mt-4 text-center text-xs text-navy-500">
-          ※ 診断結果はサーバーに保存されません
+          ※ 回答は診断用データベースに保存しません。結果の保存用URLには回答内容が含まれます
         </p>
       </section>
     </div>
@@ -92,9 +87,7 @@ function FeatureItem({
   return (
     <li className="flex gap-4">
       <div className="flex shrink-0 flex-col items-center pt-1">
-        <span className="font-display text-[10px] tracking-[0.2em] text-accent-600">
-          {label}
-        </span>
+        <span className="font-display text-[10px] tracking-[0.2em] text-accent-600">{label}</span>
         <span className="mt-1 h-8 w-px bg-navy-200" aria-hidden />
       </div>
       <div className="flex-1 pt-0.5">
