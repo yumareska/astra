@@ -38,31 +38,27 @@ export function QuizContainer({ initialSearch }: QuizContainerProps) {
 
   const quiz = useQuizStep(initialAnswers);
   const gender = quiz.answers.gender as Gender | undefined;
-  const showProgress =
-    quiz.currentStep !== "lp" && quiz.currentStep !== "result";
+  const showProgress = quiz.currentStep !== "lp" && quiz.currentStep !== "result";
 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col px-5 py-6 md:py-10">
       {showProgress && (
         <div className="mb-8">
-          <ProgressBar current={quiz.stepIndex} total={quiz.totalSteps - 1} />
+          <ProgressBar
+            current={quiz.stepIndex}
+            total={quiz.stepIndex <= 5 ? undefined : quiz.totalSteps - 2}
+          />
         </div>
       )}
 
       {quiz.currentStep === "lp" && <LpStep onStart={quiz.start} />}
 
       {quiz.currentStep === "gender" && (
-        <GenderStep
-          onBack={quiz.back}
-          onSelect={(g: Gender) => quiz.next({ gender: g })}
-        />
+        <GenderStep onBack={quiz.back} onSelect={(g: Gender) => quiz.next({ gender: g })} />
       )}
 
       {quiz.currentStep === "age" && (
-        <AgeStep
-          onBack={quiz.back}
-          onSelect={(a: AgeBand) => quiz.next({ age: a })}
-        />
+        <AgeStep onBack={quiz.back} onSelect={(a: AgeBand) => quiz.next({ age: a })} />
       )}
 
       {quiz.currentStep === "income" && gender && (
@@ -104,14 +100,16 @@ export function QuizContainer({ initialSearch }: QuizContainerProps) {
       {quiz.currentStep === "children" && (
         <ChildrenStep
           onBack={quiz.back}
-          onSelect={(c: ChildPreference) =>
-            quiz.next({ childPreference: c })
-          }
+          onSelect={(c: ChildPreference) => quiz.next({ childPreference: c })}
         />
       )}
 
       {quiz.currentStep === "result" && (
-        <ResultView answers={quiz.answers} onRestart={quiz.reset} encodedParams={encodeAnswers(quiz.answers)} />
+        <ResultView
+          answers={quiz.answers}
+          onRestart={quiz.reset}
+          encodedParams={encodeAnswers(quiz.answers)}
+        />
       )}
     </div>
   );
@@ -135,10 +133,7 @@ function ResultView({ answers, onRestart, encodedParams }: ResultViewProps) {
     return (
       <div className="text-navy-700">
         入力が不足しています。もう一度診断してください。
-        <button
-          onClick={onRestart}
-          className="mt-4 block text-accent-600 underline"
-        >
+        <button onClick={onRestart} className="mt-4 block text-accent-600 underline">
           最初から診断する
         </button>
       </div>
@@ -156,7 +151,15 @@ function ResultView({ answers, onRestart, encodedParams }: ResultViewProps) {
   };
   const id = classifyStrategyId(input);
   const modifier = applyChildModifier(input.childPreference);
-  return <ResultInner id={id} modifier={modifier} onRestart={onRestart} encodedParams={encodedParams} input={input} />;
+  return (
+    <ResultInner
+      id={id}
+      modifier={modifier}
+      onRestart={onRestart}
+      encodedParams={encodedParams}
+      input={input}
+    />
+  );
 }
 
 function ResultInner({
@@ -175,5 +178,13 @@ function ResultInner({
   useEffect(() => {
     trackQuizComplete(id);
   }, [id]);
-  return <StrategyResult strategyId={id} modifier={modifier} onRestart={onRestart} encodedParams={encodedParams} input={input} />;
+  return (
+    <StrategyResult
+      strategyId={id}
+      modifier={modifier}
+      onRestart={onRestart}
+      encodedParams={encodedParams}
+      input={input}
+    />
+  );
 }

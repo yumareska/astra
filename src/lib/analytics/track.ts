@@ -17,4 +17,5 @@ export function trackQuizComplete(strategyId: string) {
 
 export function trackCtaClick(strategyId: string) {
   trackEvent("cta_click", { strategy_id: strategyId });
+  trackEvent("consult_schedule_open", { strategy_id: strategyId, source: "diagnostic_result" });
 }
