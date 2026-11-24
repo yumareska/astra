@@ -4,7 +4,7 @@ import { getStrategyContent } from "@/lib/content/strategies";
 import type { ChildModifier, StrategyId, UserInput } from "@/lib/strategy/types";
 import { CopyButton } from "./CopyButton";
 import { trackCtaClick } from "@/lib/analytics/track";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 
 const WHEN_LABEL: Record<"today" | "thisWeek" | "thisMonth", string> = {
   today: "今日",
@@ -27,9 +27,9 @@ const INCOME_LABEL: Record<NonNullable<UserInput["income"]>, string> = {
 };
 
 const CHILD_LABEL: Record<UserInput["childPreference"], string> = {
-  want: "子供希望",
-  "not-want": "子供不要",
-  "no-preference": "こだわらない",
+  want: "子どもを希望",
+  "not-want": "子どもを望まない",
+  "no-preference": "子どもについて未定",
 };
 
 function formatInput(input: UserInput): string {
@@ -46,7 +46,7 @@ function formatInput(input: UserInput): string {
   return parts.join(" / ");
 }
 
-const BOOKING_URL = "https://calendar.app.google/FmTf7UW7N86nwvbp6";
+const BOOKING_URL = "https://calendar.app.google/Ge5LVT7ZM2GCiDVq7";
 
 interface Props {
   strategyId: StrategyId;
@@ -62,10 +62,12 @@ export function StrategyResult({ strategyId, modifier, onRestart, encodedParams,
 
   return (
     <>
-      <article className="flex flex-col gap-10 pb-24">
+      <article className="flex flex-col gap-10 pb-[calc(8rem+env(safe-area-inset-bottom))]">
         <Header name={c.name} catchphrase={c.catchphrase} isFemale={isFemale} input={input} />
 
-        <Section title="共感フック" label="01  EMPATHY" variant="accent">
+        <p className="text-sm leading-relaxed text-navy-600">この結果は、回答に合わせた振り返りのヒントです。性格・相性・成婚の可能性を判定するものではありません。ご自身に合う内容から使ってください。</p>
+
+        <Section title="気になることはありますか" label="01  EMPATHY" variant="accent">
           <p className="mb-3 text-navy-700">{c.empathyHook.intro}</p>
           <ul className="space-y-2">
             {c.empathyHook.checks.map((check, i) => (
@@ -80,31 +82,31 @@ export function StrategyResult({ strategyId, modifier, onRestart, encodedParams,
           </ul>
         </Section>
 
-        <Section title="市場データ" label="02  MARKET">
+        <Section title="今回の回答から考えること" label="02  MARKET">
           <div className="rounded-xl bg-white p-5 leading-relaxed text-navy-700 shadow-sm ring-1 ring-navy-100">
             {c.marketData.body}
           </div>
         </Section>
 
-        <Section title="ポジション解説" label="03  POSITION">
+        <Section title="見直しの出発点" label="03  POSITION">
           <div className="rounded-xl bg-white p-5 leading-relaxed text-navy-700 shadow-sm ring-1 ring-navy-100">
             {c.positionAnalysis}
           </div>
         </Section>
 
-        <FoldableSection title="ストーリー事例" label="CASE STUDY">
+        <FoldableSection title="相談で整理する内容の例" label="CASE STUDY">
           <div className="rounded-xl bg-white p-5 text-sm leading-relaxed shadow-sm ring-1 ring-navy-100">
             <p className="mb-3 font-bold text-navy-900">{c.story.personaLabel}</p>
             <div className="space-y-2 text-navy-700">
-              <Row label="Before" body={c.story.before} />
-              <Row label="戦略" body={c.story.strategy} />
-              <Row label="After" body={c.story.after} />
+              <Row label="相談前の場面" body={c.story.before} />
+              <Row label="一緒に整理" body={c.story.strategy} />
+              <Row label="持ち帰るもの" body={c.story.after} />
             </div>
           </div>
         </FoldableSection>
 
         <div className="grid gap-4 md:grid-cols-2">
-          <Section title="DO（推奨）" label="DO" variant="accent">
+          <Section title="試してみること" label="DO" variant="accent">
             <ul className="flex flex-col gap-3">
               {c.dos.map((d, i) => (
                 <li
@@ -117,7 +119,7 @@ export function StrategyResult({ strategyId, modifier, onRestart, encodedParams,
               ))}
             </ul>
           </Section>
-          <Section title="DON'T（NG）" label="DON'T" variant="muted">
+          <Section title="避けたい進め方" label="DON'T" variant="muted">
             <ul className="flex flex-col gap-3">
               {c.donts.map((d, i) => (
                 <li
@@ -132,7 +134,7 @@ export function StrategyResult({ strategyId, modifier, onRestart, encodedParams,
           </Section>
         </div>
 
-        <FoldableSection title="あるある失敗パターン" label="PITFALLS">
+        <FoldableSection title="迷ったときの振り返り" label="PITFALLS">
           <ul className="flex flex-col gap-2">
             {c.commonFailures.map((f, i) => (
               <li
@@ -145,12 +147,10 @@ export function StrategyResult({ strategyId, modifier, onRestart, encodedParams,
           </ul>
         </FoldableSection>
 
-        <Section title="勝ちパターンの型" label="WINNING TEMPLATE" variant="accent">
+        <Section title="自分の言葉にするヒント" label="WINNING TEMPLATE" variant="accent">
           <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-navy-200">
             <div className="mb-3 flex items-center justify-between gap-3">
-              <p className="text-sm font-semibold text-navy-900">
-                {c.winningPattern.title}
-              </p>
+              <p className="text-sm font-semibold text-navy-900">{c.winningPattern.title}</p>
               <CopyButton text={c.winningPattern.template} label="テンプレをコピー" />
             </div>
             <p className="whitespace-pre-wrap rounded-md bg-navy-50 p-4 text-sm leading-relaxed text-navy-800">
@@ -159,20 +159,22 @@ export function StrategyResult({ strategyId, modifier, onRestart, encodedParams,
           </div>
         </Section>
 
-        <Section title="PRO TIP" label="ASTRA INSIGHT" variant="accent">
+        <Section title="一人で整理しにくいときは" label="ASTRA INSIGHT" variant="accent">
           <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-navy-900 to-navy-800 p-6 text-white shadow-lg">
             <div
               className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-accent-500/10 blur-2xl"
               aria-hidden
             />
             <p className="font-display text-[11px] tracking-[0.4em] text-accent-400">
-              ◆  ASTRA INSIGHT
+              ◆ ASTRA INSIGHT
             </p>
-            <p className="mt-3 leading-relaxed text-navy-50">{c.proTip}</p>
+            <p className="mt-3 leading-relaxed text-navy-50">
+              無料オンライン相談では、診断の分類だけでは分からない実際の出来事とご本人の希望を伺います。気になる点を一つ選ぶところから、一緒に整理できます。
+            </p>
           </div>
         </Section>
 
-        <Section title="First Action 3段階" label="ACTION PLAN" variant="accent">
+        <Section title="次に試すこと" label="ACTION PLAN" variant="accent">
           <div className="grid gap-3 md:grid-cols-3">
             {c.firstActions.map((a, i) => (
               <div
@@ -222,7 +224,11 @@ export function StrategyResult({ strategyId, modifier, onRestart, encodedParams,
         </Section>
 
         {input.remarriage && input.hasChildren && c.ownChildrenAdvice && (
-          <Section title="お子様がいらっしゃる場合のアドバイス" label="FOR PARENTS" variant="accent">
+          <Section
+            title="お子様がいらっしゃる場合のアドバイス"
+            label="FOR PARENTS"
+            variant="accent"
+          >
             <div className="rounded-xl border-l-4 border-accent-500 bg-accent-50 p-5 text-sm leading-relaxed text-navy-800 shadow-sm">
               <p>{c.ownChildrenAdvice}</p>
             </div>
@@ -330,15 +336,11 @@ function Section({
     <section>
       <div className={`mb-4 border-l-4 ${SECTION_BORDER[variant]} pl-3`}>
         {label && (
-          <p
-            className={`font-display text-[10px] tracking-[0.3em] ${SECTION_LABEL[variant]}`}
-          >
+          <p className={`font-display text-[10px] tracking-[0.3em] ${SECTION_LABEL[variant]}`}>
             {label}
           </p>
         )}
-        <h2 className="text-lg font-bold leading-tight text-navy-900">
-          {title}
-        </h2>
+        <h2 className="text-lg font-bold leading-tight text-navy-900">{title}</h2>
       </div>
       {children}
     </section>
@@ -364,15 +366,11 @@ function FoldableSection({
         >
           <div>
             {label && (
-              <p
-                className={`font-display text-[10px] tracking-[0.3em] ${SECTION_LABEL[variant]}`}
-              >
+              <p className={`font-display text-[10px] tracking-[0.3em] ${SECTION_LABEL[variant]}`}>
                 {label}
               </p>
             )}
-            <span className="text-lg font-bold leading-tight text-navy-900">
-              {title}
-            </span>
+            <span className="text-lg font-bold leading-tight text-navy-900">{title}</span>
           </div>
           <span className="ml-2 flex shrink-0 items-center gap-1 text-xs font-normal text-navy-500">
             <span className="group-open:hidden">タップで展開</span>
@@ -397,17 +395,14 @@ function Row({ label, body }: { label: string; body: string }) {
   );
 }
 
-function SaveBlock({ encodedParams }: { encodedParams?: string }) {
-  const [shareUrl, setShareUrl] = useState("");
-  const [copied, setCopied] = useState(false);
+const subscribeToLocation = () => () => {};
+const getLocation = () => `${window.location.origin}${window.location.pathname}`;
+const getServerLocation = () => "";
 
-  useEffect(() => {
-    if (encodedParams) {
-      setShareUrl(
-        `${window.location.origin}${window.location.pathname}?${encodedParams}`
-      );
-    }
-  }, [encodedParams]);
+function SaveBlock({ encodedParams }: { encodedParams?: string }) {
+  const location = useSyncExternalStore(subscribeToLocation, getLocation, getServerLocation);
+  const shareUrl = location && encodedParams ? `${location}?${encodedParams}` : "";
+  const [copied, setCopied] = useState(false);
 
   if (!encodedParams) return null;
 
@@ -424,12 +419,8 @@ function SaveBlock({ encodedParams }: { encodedParams?: string }) {
 
   return (
     <div className="rounded-xl bg-navy-50 p-5 shadow-sm ring-1 ring-navy-100">
-      <p className="mb-1 font-display text-[10px] tracking-[0.3em] text-navy-500">
-        SAVE FOR LATER
-      </p>
-      <p className="mb-1 text-sm font-semibold text-navy-900">
-        あとで見返すために保存する
-      </p>
+      <p className="mb-1 font-display text-[10px] tracking-[0.3em] text-navy-500">SAVE FOR LATER</p>
+      <p className="mb-1 text-sm font-semibold text-navy-900">あとで見返すために保存する</p>
       <p className="mb-4 text-xs text-navy-600">
         URLをブックマークするか、LINEで自分に送って保存できます。
       </p>
@@ -472,9 +463,9 @@ function FloatingCtaBar({ strategyId }: { strategyId: StrategyId }) {
       }`}
     >
       <div className="border-t border-navy-700 bg-navy-900/95 shadow-2xl backdrop-blur-sm">
-        <div className="mx-auto flex max-w-lg items-center gap-3 px-4 py-3">
+        <div className="mx-auto flex max-w-lg items-center gap-3 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
           <p className="min-w-0 flex-1 text-xs leading-tight text-navy-200">
-            あなただけの個別戦略を作る
+            次に試すことを一緒に整理
             <span className="ml-1 font-semibold text-accent-400">無料・60分</span>
           </p>
           <a
@@ -482,9 +473,9 @@ function FloatingCtaBar({ strategyId }: { strategyId: StrategyId }) {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => trackCtaClick(strategyId)}
-            className="shrink-0 rounded-xl bg-accent-500 px-5 py-2.5 text-sm font-bold text-navy-900 shadow-lg transition hover:bg-accent-600 active:scale-95"
+            className="flex min-h-12 shrink-0 items-center justify-center rounded-xl bg-accent-500 px-4 py-3 text-sm font-bold text-navy-900 shadow-lg transition hover:bg-accent-600 active:scale-95"
           >
-            無料面談を予約
+            無料相談の日程を見る
           </a>
         </div>
       </div>
@@ -494,82 +485,37 @@ function FloatingCtaBar({ strategyId }: { strategyId: StrategyId }) {
 
 function CtaBlock({ strategyId }: { strategyId: StrategyId }) {
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900 p-6 text-white shadow-xl md:p-8">
-      <div
-        className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-accent-500/10 blur-3xl"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute -bottom-20 -left-16 h-48 w-48 rounded-full bg-accent-500/10 blur-3xl"
-        aria-hidden
-      />
-      <div className="relative">
-      <p className="font-display text-[11px] tracking-[0.35em] text-accent-400">
-        ASTRA  —  オーダーメイド戦略作成面談
-      </p>
-      <p className="mt-1 text-xs text-navy-300">無料・オンライン</p>
+    <section className="rounded-2xl bg-navy-900 p-6 text-white shadow-xl md:p-8">
+      <p className="text-xs font-semibold text-accent-400">アストラ｜無料オンライン相談</p>
       <h2 className="mt-4 text-xl font-bold leading-snug md:text-2xl">
-        この診断は「スペック別」の戦略です。
-        <br />
-        あなたの本当の勝ち筋は、もっと先にあります。
+        この結果をもとに、次の一歩を一緒に考えます
       </h2>
       <p className="mt-4 text-sm leading-relaxed text-navy-100">
-        年齢・年収・居住地が同じでも、婚活の結果は人によって全く違います。
-        写真の雰囲気、プロフィールの言葉選び、どんな相手にどう当たるか——
-        <strong className="text-white">
-          これらはスペックではなく、あなた個人の情報を見なければ決められません。
-        </strong>
+        診断結果は、ご自身の状況を振り返るための参考です。石川が実際の活動と希望を伺い、次に試す行動を1枚に整理します。診断前でも、これから婚活を始める方もご相談いただけます。
       </p>
       <p className="mt-4 text-sm leading-relaxed text-navy-100">
-        面談では、あなたのことを直接お聞きした上で、
-        <strong className="text-white">あなただけに当てはまる戦略</strong>
-        を一緒に言語化します。
-        この診断結果をスタート地点として、本当の意味での婚活の勝ち筋を作りましょう。
+        オンライン・60分・相談無料。入会をご希望の場合は、支援内容と別途かかる料金をご説明します。入会しない選択もできます。
       </p>
-      <p className="mt-5 text-sm font-semibold text-accent-400">
-        面談でお渡しする戦略シートに含まれるもの：
-      </p>
-      <ul className="mt-2 space-y-2 text-sm text-navy-100">
-        <li className="flex items-start gap-2">
-          <span className="mt-0.5 shrink-0 text-accent-500">◆</span>
-          <span>
-            <strong className="text-white">市場でのあなたの評価</strong>
-            ——同年代・同スペックの中で何が強みで、何が足を引っ張っているか
-          </span>
-        </li>
-        <li className="flex items-start gap-2">
-          <span className="mt-0.5 shrink-0 text-accent-500">◆</span>
-          <span>
-            <strong className="text-white">プロフィール・写真の改善方針</strong>
-            ——今何がNGで、どう変えれば反応が変わるか
-          </span>
-        </li>
-        <li className="flex items-start gap-2">
-          <span className="mt-0.5 shrink-0 text-accent-500">◆</span>
-          <span>
-            <strong className="text-white">アプローチすべき相手の定義</strong>
-            ——年齢・属性・優先順位を具体的に絞り込む
-          </span>
-        </li>
-      </ul>
       <a
         href={BOOKING_URL}
         target="_blank"
         rel="noopener noreferrer"
         onClick={() => trackCtaClick(strategyId)}
-        className="mt-6 block w-full rounded-xl bg-accent-500 px-4 py-4 text-center text-navy-900 transition hover:bg-accent-600"
+        className="mt-6 flex min-h-12 w-full items-center justify-center rounded-xl bg-accent-500 px-4 py-4 text-center font-bold text-navy-900 transition hover:bg-accent-600"
       >
-        <span className="block text-base font-bold leading-snug">
-          あなただけの個別戦略を作ってもらう
-        </span>
-        <span className="mt-1 block text-xs font-normal opacity-80">
-          無料・完全オンライン・所要時間60分
-        </span>
+        無料相談の日程を見る
       </a>
-      <p className="mt-4 text-center text-xs text-navy-200">
-        ※「相談」ではなく「個別戦略の作成」の場です。
+      <p className="mt-3 text-center text-xs leading-relaxed text-navy-200">
+        日程を見るだけでは予約は確定しません。ご希望の日時を選び、連絡先を入力して予約します。
       </p>
-      </div>
-    </div>
+      <a
+        href="https://lin.ee/FWRCarI"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-4 flex min-h-12 items-center justify-center text-sm text-white underline underline-offset-4"
+      >
+        予約前にLINEで質問する
+      </a>
+    </section>
   );
 }
